@@ -11,7 +11,7 @@ export default class App extends Component {
   render() {
     return (
       <NavigationContainer>
-        { this.renderRoutes() }
+        {this.renderRoutes()}
       </NavigationContainer>
     );
   }
