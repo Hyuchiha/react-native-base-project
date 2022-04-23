@@ -1,5 +1,4 @@
 import axios from 'axios';
-import api from '../api/Api';
 import { API_PATH } from '../constants/global';
 // import AuthService from '../services/Auth/AuthService';
 

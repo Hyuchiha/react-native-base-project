@@ -1,6 +1,6 @@
-import configureStore from './CreateStore';
+import configureStore from './create-store';
 import rootSaga from './sagas';
-import { AuthActionTypes } from './actions/AuthActions';
+import { AuthActionTypes } from './actions/auth-actions';
 import appReducer from './reducers';
 
 export default () => {

@@ -8,7 +8,7 @@ const storage = new MMKV({
 
 let userStorage = null;
 
-const secureStorage = () => {
+export const generateSecureStorage = () => {
   if (!userStorage) {
     const store = StoreWrapper.getStore();
     const userId = store.getState().session.id;
@@ -17,8 +17,6 @@ const secureStorage = () => {
       id: `user-${userId}-storage`
     });
   }
-
-  return userStorage;
 }
 
 export const StoreKeys = {
@@ -27,4 +25,4 @@ export const StoreKeys = {
 }
 
 export const SessionStorage = storage;
-export const SecureStorage = secureStorage();
+export const SecureStorage = userStorage;

@@ -1,13 +1,14 @@
-import { SessionStorage, StoreKeys } from "../../../api/Storage";
+import { all, takeLatest } from 'redux-saga/effects'
+import { generateSecureStorage, SessionStorage, StoreKeys } from "../../../api/Storage";
 import jwtDecode from "jwt-decode";
 import api from "../../../api/Api";
 import StoreWrapper from "../../../api/StoreWrapper";
-import { updateSession } from "../../actions/AuthActions";
+import { AuthActionTypes, logout, updateSession } from "../../actions/auth-actions";
 import AuthService from "../../../services/Auth/AuthService";
 
-function* validateSession(action) {
-  const currentToken = Storage.Session.getString(StoreKeys.TOKEN);
-  const currentRefreshToken = Storage.Session.getString(StoreKeys.REFRESH_TOKEN);
+function* validateSession() {
+  const currentToken = SessionStorage.getString(StoreKeys.TOKEN);
+  const currentRefreshToken = SessionStorage.getString(StoreKeys.REFRESH_TOKEN);
 
   const authorized = currentToken && jwtDecode(currentToken).exp > (Date.now() / 1000);
 
@@ -22,9 +23,14 @@ function* validateSession(action) {
     api.updateTokens(token, refreshToken);
     saveTokenAndDecode(token, refreshToken);
     makeApiCalls();
+  } else {
+    // No session or Token, lets send to Initial Screen
+    const store = StoreWrapper.getStore();
+    store.dispatch(logout());
   }
 }
 
+// Simple validations
 function saveTokenAndDecode(currentToken, refreshToken) {
   api.setToken(currentToken);
   api.setRefreshToken(refreshToken);
@@ -36,8 +42,18 @@ function saveTokenAndDecode(currentToken, refreshToken) {
     session: decodeUser,
     authorized: true
   }));
+
+  // We create the user secureStorage
+  generateSecureStorage();
 }
 
+// Simple validations
 function makeApiCalls() {
 
+}
+
+export default function* watchSession() {
+  yield all([
+    takeLatest(AuthActionTypes.VALIDATE_SESSION, validateSession)
+  ])
 }

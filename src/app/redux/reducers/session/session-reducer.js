@@ -1,5 +1,5 @@
 import jwtDecode from 'jwt-decode';
-import { AuthActionTypes } from "../../actions/AuthActions";
+import { AuthActionTypes } from "../../actions/auth-actions";
 
 export const INITIAL_STATE = {
   loading: false,
@@ -48,5 +48,12 @@ const sessionReducer = (state = INITIAL_STATE, action) => {
       return state;
   }
 };
+
+// Selectors
+export const selectIsLoggedIn = (state) => {
+  const { loading, session, authorized } = state.session;
+
+  return !loading && session && authorized;
+}
 
 export default sessionReducer;

@@ -1,23 +1,24 @@
-import Home from "../screens/Home/Home";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Welcome from "../screens/Enrollment/Welcome";
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import AppNavigator from "./navs/app-navigator";
+import AuthNavigator from "./navs/auth-navigator";
+import { useSelector } from "react-redux";
+import { selectIsLoggedIn } from "../redux/reducers/session/session-reducer";
 
-const Stack = createNativeStackNavigator();
+const AppRoute = () => {
+   const isLoggedIn = useSelector(selectIsLoggedIn);
 
-const publicRoutes = (
-  <Stack.Navigator>
-    <Stack.Screen name="Welcome" component={Welcome} />
-  </Stack.Navigator>
-);
+   let Stack = isLoggedIn ? <AppNavigator /> : <AuthNavigator />;
 
-const routes = (
-  <Stack.Navigator>
-    <Stack.Screen name="Home" component={Home} />
-  </Stack.Navigator>
-);
+  return (
+    <NavigationContainer>
+      {/* Conditional stack navigator rendering based on login state */}
 
-const buildRoutes = (isSigned) => {
-  return isSigned ? routes : publicRoutes
+      {
+        Stack
+      }
+    </NavigationContainer>
+  );
 }
 
-export default buildRoutes;
+export default AppRoute;
