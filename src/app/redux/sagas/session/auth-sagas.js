@@ -17,16 +17,19 @@ function* validateSession() {
     makeApiCalls();
   } else if (currentRefreshToken) {
 
-    const refreshResponse = yield AuthService.refreshToken(currentRefreshToken);
-    const { token, refreshToken } = refreshResponse.data.data;
+    try {
+      const refreshResponse = yield AuthService.refreshToken(currentRefreshToken);
+      const { token, refreshToken } = refreshResponse.data.data;
 
-    api.updateTokens(token, refreshToken);
-    saveTokenAndDecode(token, refreshToken);
-    makeApiCalls();
+      api.updateTokens(token, refreshToken);
+      saveTokenAndDecode(token, refreshToken);
+      makeApiCalls();
+    } catch (err) {
+     yield setupStoreNoSession();
+    }
   } else {
     // No session or Token, lets send to Initial Screen
-    const store = StoreWrapper.getStore();
-    store.dispatch(logout());
+    yield setupStoreNoSession();
   }
 }
 
@@ -47,9 +50,17 @@ function saveTokenAndDecode(currentToken, refreshToken) {
   generateSecureStorage();
 }
 
-// Simple validations
 function makeApiCalls() {
 
+}
+
+async function setupStoreNoSession() {
+  await new Promise(function(resolve) {
+    setTimeout(resolve, 1000);
+  });
+
+  const store = StoreWrapper.getStore();
+  store.dispatch(updateSession({}));
 }
 
 export default function* watchSession() {

@@ -11,8 +11,8 @@ const sessionReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case AuthActionTypes.LOGIN:
       return {
-        loading: true,
-        ...state
+        ...state,
+        loading: true
       };
     case AuthActionTypes.LOGIN_SUCCESS:
       if (action.payload) {
@@ -29,13 +29,13 @@ const sessionReducer = (state = INITIAL_STATE, action) => {
       return state;
     case AuthActionTypes.LOGIN_FAIL:
       return {
-        loading: false,
-        ...state
+        ...state,
+        loading: false
       };
     case AuthActionTypes.VALIDATE_SESSION:
       return {
-        loading: true,
-        ...state
+        ...state,
+        loading: true
       };
     case AuthActionTypes.UPDATE_SESSION:
       return {
@@ -50,6 +50,12 @@ const sessionReducer = (state = INITIAL_STATE, action) => {
 };
 
 // Selectors
+export const selectIsLoadingSession = (state) => {
+  const { loading, session } = state.session;
+
+  return loading && !session;
+}
+
 export const selectIsLoggedIn = (state) => {
   const { loading, session, authorized } = state.session;
 
