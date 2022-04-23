@@ -3,6 +3,7 @@ const AuthActionTypes = {
   LOGIN_SUCCESS: '[AUTH] Login success',
   LOGIN_FAIL: '[AUTH] Login fail',
   LOGOUT: '[AUTH] Logout user',
+  VALIDATE_SESSION: '[AUTH] Validate session',
   UPDATE_SESSION: '[AUTH] Update session',
   REGISTER_START: '[REGISTER] Start register',
   REGISTER_SUCCESS: '[REGISTER] Register success'
@@ -20,6 +21,12 @@ export function login(props) {
 export function logout() {
   return {
     type: AuthActionTypes.LOGOUT
+  };
+}
+
+export function validateSession() {
+  return {
+    type: AuthActionTypes.VALIDATE_SESSION
   };
 }
 
@@ -43,6 +50,7 @@ const AuthActions = {
   login,
   logout,
   updateSession,
+  validateSession,
   startRegister
 };
 
